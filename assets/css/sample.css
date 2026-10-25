@@ -1,0 +1,119 @@
+/* FJMK sample direction.
+   Materials, type and the line are taken from the film itself:
+   paper #ECE8DE, ink #2E2A25, the near-black card #1C1812,
+   and a simplified trace of the opening stroke sampled from the film at 0.5s. */
+
+@font-face{font-family:Newsreader;src:url('../fonts/newsreader-variable.ttf') format('truetype');font-style:normal;font-weight:300 800;font-display:swap}
+@font-face{font-family:Manrope;src:url('../fonts/manrope-variable.ttf') format('truetype');font-style:normal;font-weight:200 800;font-display:swap}
+
+:root{
+  --paper:#ece8de;      /* sampled from the film's bright act  */
+  --ink:#2e2a25;        /* sampled from the film's drawn line   */
+  --card:#1c1812;       /* sampled from the film's end card     */
+  --off:#e6e3db;        /* the film's own logo colour           */
+  --terra:#9c4530;      /* FJMK accent                          */
+  --muted:#6b6259;
+  --rule:#d8d0c2;
+  --serif:'Newsreader',Georgia,serif;
+  --sans:Manrope,system-ui,sans-serif;
+  --ease:cubic-bezier(.32,.72,0,1);
+  --pad:clamp(24px,4.2vw,80px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;font-weight:500;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+h1,h2,h3,p{margin:0}
+h1,h2{font-family:var(--serif);font-weight:500;letter-spacing:-.02em;line-height:1.02}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--terra);outline-offset:4px}
+.skip{position:absolute;left:16px;top:-80px;background:var(--ink);color:var(--paper);padding:12px 20px;z-index:99}.skip:focus{top:16px}
+
+/* Navigation sits in the film's own paper, so it reads on both acts. */
+.nav{position:fixed;top:16px;left:0;right:0;z-index:60;display:flex;align-items:center;gap:16px;padding-inline:var(--pad)}
+.brand{flex-shrink:0;display:inline-flex;align-items:center;background:var(--paper);padding:9px 13px;border:1px solid #2e2a2526;border-radius:2px;box-shadow:0 6px 20px #1c181226}
+.brand img{width:104px;height:auto}
+.nav nav{display:flex;gap:4px;margin-left:auto;padding:5px;background:var(--paper);border:1px solid #2e2a2526;border-radius:2px;box-shadow:0 6px 20px #1c181226}
+.nav nav a{font-size:13px;font-weight:600;line-height:1.2;padding:9px 13px;border-radius:2px;background:transparent;transition:background .25s var(--ease)}
+.nav nav a:hover{background:var(--rule)}
+.nav .button{margin-left:8px}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:12px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:700;padding:13px 20px;border-radius:2px;border:1px solid var(--ink);transition:background .25s var(--ease),transform .15s var(--ease)}
+.button:hover{background:var(--terra);border-color:var(--terra)}
+.button:active{transform:scale(.98)}
+
+/* The film is the whole first screen. */
+.hero{position:relative;height:100svh;min-height:560px;overflow:hidden;background:var(--card);isolation:isolate}
+.hero-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-1;transition:object-position .3s linear}
+/* The cover still is the same frame the film is about to draw, pinned to the stroke. */
+.opening-still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;opacity:1;pointer-events:none;transition:opacity .45s var(--ease),object-position .3s linear}
+.opening-still.is-released{opacity:0}
+html.reduce-motion .hero-film{visibility:hidden}
+.hero-label{position:absolute;top:78px;left:var(--pad);z-index:2;margin:0;background:#1c1812b8;color:#ece8de;padding:6px 10px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+.hero-bar{position:absolute;left:var(--pad);bottom:22px;z-index:2}
+.media-button{min-height:44px;display:inline-flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid #e6e3db66;border-radius:2px;background:#1c1812b3;color:var(--off);font-size:12px;font-weight:600;cursor:pointer;backdrop-filter:blur(7px);transition:background .25s var(--ease)}
+.media-button:hover{background:#1c1812e6}
+.media-button[aria-pressed="true"]{background:var(--off);color:var(--card);border-color:var(--off)}
+.sound-icon{width:15px;height:15px;display:grid;place-items:center}
+.sound-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.scroll-cue{position:absolute;right:var(--pad);bottom:22px;z-index:2;display:flex;align-items:center;gap:12px;color:#fff;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;mix-blend-mode:difference}
+.scroll-cue svg{width:1px;height:44px;overflow:visible}
+.scroll-cue svg path{stroke:currentColor;stroke-width:1;fill:none}
+
+/* Simplified echo of the opening stroke, kept deliberately short. */
+.rule{display:block;width:100%;height:12px;overflow:visible;color:var(--ink)}
+.rule-path{fill:none;stroke:currentColor;stroke-width:1;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.4s var(--ease)}
+.rule.on .rule-path{stroke-dashoffset:0}
+
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:22px}
+.intro{padding:clamp(72px,10vw,140px) var(--pad) clamp(64px,9vw,120px);background:var(--card);color:var(--off)}
+.intro-inner{max-width:1120px;margin-inline:auto}
+.intro .eyebrow{color:#cf997c}
+.intro h1{font-size:clamp(46px,8.5vw,116px);text-wrap:balance}
+.rule-headline{height:clamp(30px,5vw,64px);margin-top:clamp(14px,2.5vw,28px);max-width:clamp(320px,42vw,620px);color:var(--off)}
+.intro-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:clamp(30px,5vw,54px);border-top:1px solid #e6e3db40;padding-top:26px}
+.intro-bottom p{max-width:480px;font-size:16px;color:#cbc5b8}
+.intro .button{flex:none;background:var(--off);color:var(--card);border-color:var(--off)}
+.intro .button:hover{background:#cf997c;border-color:#cf997c}
+
+.direction{padding:clamp(64px,9vw,120px) var(--pad) clamp(72px,10vw,130px)}
+.direction h2{font-size:clamp(34px,4.8vw,58px);max-width:940px;text-wrap:balance}
+.direction .rule{max-width:clamp(320px,42vw,620px);margin-top:clamp(24px,4vw,44px)}
+.word{opacity:.3;transition:opacity 620ms var(--ease)}.word.on{opacity:1}
+
+.work{padding:8px var(--pad) clamp(64px,9vw,110px)}
+.work-row{display:grid;grid-template-columns:60px 1fr 2fr;gap:24px;align-items:baseline;padding:30px 0;border-top:1px solid var(--rule)}
+.work-index{font-size:12px;font-weight:700;color:var(--terra)}
+.work-row h3{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-.01em}
+.work-row p{font-size:15px;color:var(--muted)}
+.close{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:clamp(72px,10vw,130px) var(--pad);border-top:1px solid var(--rule);background:var(--card);color:var(--off)}
+.close h2{font-size:clamp(34px,5.4vw,66px)}
+.close .eyebrow{color:#cf997c}
+.round-link{flex-shrink:0;width:76px;height:76px;border-radius:50%;border:1px solid #e6e3db80;display:grid;place-items:center;font-size:28px;transition:background .25s var(--ease),color .25s var(--ease)}
+.round-link:hover{background:var(--off);color:var(--card)}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding:22px var(--pad) 38px;border-top:1px solid #e6e3db2e;font-size:12px;color:#a49c90;background:var(--card)}
+.footer nav{display:flex;gap:24px;flex-wrap:wrap}
+.footer a:hover{color:var(--off)}
+
+@media(max-width:767px){
+  .nav{top:10px;gap:10px}
+  .nav nav{display:none}
+  .nav .button{margin-left:auto}
+  .hero{min-height:600px}
+  .hero-label{top:72px;font-size:9px;padding:5px 8px}
+  .hero-bar,.scroll-cue{bottom:18px}
+  .intro{padding-top:56px;padding-bottom:56px}
+  .intro h1{font-size:clamp(42px,11.5vw,64px)}
+  .rule-headline{height:34px;margin-top:16px;max-width:300px}
+  .intro-bottom{align-items:flex-start;flex-direction:column;gap:22px;margin-top:26px;padding-top:20px}
+  .intro-bottom p{font-size:15px}
+  .direction{padding-block:56px}
+  .direction h2{font-size:clamp(32px,8.6vw,44px)}
+  .work{padding-top:4px;padding-bottom:56px}
+  .work-row{grid-template-columns:36px 1fr;gap:6px 18px;padding:24px 0}
+  .work-row p{grid-column:2}
+  .close{padding-block:56px}
+  .close h2{font-size:clamp(30px,8vw,44px)}
+  .footer{flex-direction:column;align-items:flex-start;gap:14px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.rule-path{stroke-dashoffset:0!important}.word{opacity:1!important}}
